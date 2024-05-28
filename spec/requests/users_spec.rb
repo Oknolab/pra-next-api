@@ -16,4 +16,19 @@ RSpec.describe "Users", type: :request do
       expect(users_responsed).to eq User.all.map(&:info)
     end
   end
+
+  describe "POST /create" do
+    before do
+      post "/users", params: { user: { userName: "Alice", age: 20 } }
+    end
+
+    it "returns 200" do
+      expect(response).to have_http_status(200)
+    end
+
+    it "returns user" do
+      user_responsed = JSON.parse(response.body)["user"].symbolize_keys
+      expect(user_responsed).to eq User.last.info
+    end
+  end
 end
